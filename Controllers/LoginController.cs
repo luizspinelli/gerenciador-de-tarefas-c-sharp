@@ -45,7 +45,12 @@ namespace GerenciadorDeTarefas.Controllers
           });
         }
 
-        return Ok("Usuário autenticado com sucesso");
+        return Ok(new LoginRespostaDTO()
+        {
+          Email = loginTeste,
+          Nome = "Usuario de teste",
+          Token = ""
+        });
       }
       catch (Exception e)
       {
