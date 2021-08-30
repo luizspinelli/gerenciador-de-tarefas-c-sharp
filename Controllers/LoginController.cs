@@ -15,6 +15,8 @@ namespace GerenciadorDeTarefas.Controllers
   public class LoginController : ControllerBase
   {
     private readonly ILogger<LoginController> _logger;
+    private readonly string loginTeste = "admin@admin.com";
+    private readonly string senhaTeste = "Admin1234@";
 
     public LoginController(ILogger<LoginController> logger)
     {
@@ -26,7 +28,15 @@ namespace GerenciadorDeTarefas.Controllers
     {
       try
       {
-        if (requisicao == null || requisicao.Login == null || requisicao.Senha == null)
+        if (
+            requisicao == null
+            || string.IsNullOrEmpty(requisicao.Login)
+            || string.IsNullOrWhiteSpace(requisicao.Login)
+            || string.IsNullOrEmpty(requisicao.Senha)
+            || string.IsNullOrWhiteSpace(requisicao.Senha)
+            || requisicao.Login != loginTeste
+            || requisicao.Senha != senhaTeste
+          )
         {
           return BadRequest(new ErroRespostaDTO()
           {
