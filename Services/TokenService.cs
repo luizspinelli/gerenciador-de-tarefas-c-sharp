@@ -19,10 +19,7 @@ namespace GerenciadorDeTarefas.Services
               new Claim(ClaimTypes.Sid, usuario.Id.ToString()),
               new Claim(ClaimTypes.Name, usuario.Nome)
           }),
-        SigningCredentials = new SigningCredentials(
-            new SymmetricSecurityKey(chaveCriptografiaEmBytes),
-            SecurityAlgorithms.RsaSha256Signature
-        )
+        SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(chaveCriptografiaEmBytes), SecurityAlgorithms.HmacSha256Signature)
       };
 
       var token = tokenHandler.CreateToken(tokenDescriptor);

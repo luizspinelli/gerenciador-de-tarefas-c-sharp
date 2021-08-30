@@ -7,6 +7,8 @@ using Microsoft.Extensions.Logging;
 using GerenciadorDeTarefas.Dtos;
 using System.Web;
 using Microsoft.AspNetCore.Http;
+using GerenciadorDeTarefas.Models;
+using GerenciadorDeTarefas.Services;
 
 namespace GerenciadorDeTarefas.Controllers
 {
@@ -45,11 +47,21 @@ namespace GerenciadorDeTarefas.Controllers
           });
         }
 
+        var usuarioTeste = new Usuario()
+        {
+          Id = 1,
+          Nome = "Usuario Teste",
+          Email = loginTeste,
+          Senha = senhaTeste
+        };
+
+        var token = TokenService.CriarToken(usuarioTeste);
+
         return Ok(new LoginRespostaDTO()
         {
-          Email = loginTeste,
-          Nome = "Usuario de teste",
-          Token = ""
+          Email = usuarioTeste.Email,
+          Nome = usuarioTeste.Nome,
+          Token = token
         });
       }
       catch (Exception e)
