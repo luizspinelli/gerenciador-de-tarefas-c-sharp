@@ -1,6 +1,7 @@
 using System;
 using GerenciadorDeTarefas.Dtos;
 using GerenciadorDeTarefas.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -18,28 +19,21 @@ namespace GerenciadorDeTarefas.Controllers
       _logger = logger;
     }
 
-    [HttpGet]
-    public IActionResult ObterUsuario()
+    [HttpPost]
+    [AllowAnonymous]
+    public IActionResult SalvarUsuario([FromBody] Usuario usuario)
     {
       try
       {
-        var usuarioTeste = new Usuario()
-        {
-          Id = 1,
-          Nome = "Usuario Teste",
-          Email = "'emaail'",
-          Senha = "'senhaTeste'"
-        };
-
-        return Ok(usuarioTeste);
+        return Ok(usuario);
       }
       catch (Exception e)
       {
-        _logger.LogError("Ocorreu erro ao obter usuario", e);
+        _logger.LogError("Ocorreu erro ao salvar usuario", e);
         return StatusCode(StatusCodes.Status500InternalServerError, new ErroRespostaDTO()
         {
           Status = StatusCodes.Status500InternalServerError,
-          Erro = "Ocorreu erro ao obter o usuario, tente novamente"
+          Erro = "Ocorreu erro ao salvar o usuario, tente novamente"
         });
       }
     }
