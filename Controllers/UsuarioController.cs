@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using GerenciadorDeTarefas.Dtos;
 using GerenciadorDeTarefas.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -25,6 +27,32 @@ namespace GerenciadorDeTarefas.Controllers
     {
       try
       {
+        var erros = new List<string>();
+
+        if (String.IsNullOrEmpty(usuario.Nome) || string.IsNullOrWhiteSpace(usuario.Nome) || usuario.Nome.Length < 2)
+        {
+          erros.Add("Nome inválido");
+        }
+
+        if (String.IsNullOrEmpty(usuario.Senha) || string.IsNullOrWhiteSpace(usuario.Senha) || usuario.Senha.Length < 4 && Regex.IsMatch(usuario.Senha, "^[a-zA-Z0-9]+", RegexOptions.IgnoreCase))
+        {
+          erros.Add("Senha inválida");
+        }
+
+        Regex regex = new Regex(@"^([\w\.\-\+\d]+)@([\w\-]+)((\.(\w){2,3})+)$");
+
+        if (String.IsNullOrEmpty(usuario.Email) || string.IsNullOrWhiteSpace(usuario.Email) || !regex.Match(usuario.Email).Success)
+        {
+          erros.Add("Email inválida");
+        }
+        if (erros.Count > 0)
+        {
+          return BadRequest(new ErroRespostaDTO(){
+            Status = StatusCodes.Status400BadRequest,
+            Erros = erros
+          });
+        }
+
         return Ok(usuario);
       }
       catch (Exception e)
