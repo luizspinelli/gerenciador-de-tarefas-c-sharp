@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using GerenciadorDeTarefas.Dtos;
 using GerenciadorDeTarefas.Models;
+using GerenciadorDeTarefas.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -15,10 +16,12 @@ namespace GerenciadorDeTarefas.Controllers
   public class UsuarioController : BaseController
   {
     private readonly ILogger<UsuarioController> _logger;
+    private readonly IUsuarioRepository _usuarioRepository;
 
-    public UsuarioController(ILogger<UsuarioController> logger)
+    public UsuarioController(ILogger<UsuarioController> logger, IUsuarioRepository usuarioRepository)
     {
       _logger = logger;
+      _usuarioRepository = usuarioRepository;
     }
 
     [HttpPost]
@@ -47,13 +50,16 @@ namespace GerenciadorDeTarefas.Controllers
         }
         if (erros.Count > 0)
         {
-          return BadRequest(new ErroRespostaDTO(){
+          return BadRequest(new ErroRespostaDTO()
+          {
             Status = StatusCodes.Status400BadRequest,
             Erros = erros
           });
         }
 
-        return Ok(usuario);
+        _usuarioRepository.Salvar(usuario);
+
+        return Ok(new { msg = "Usuario criado com sucesso" });
       }
       catch (Exception e)
       {
